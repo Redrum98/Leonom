@@ -76,7 +76,7 @@ app.post('/webhook', (req, res) => {
 app.get('/webhook', (req, res) => {
   
   /** UPDATE YOUR VERIFY TOKEN **/
-  const VERIFY_TOKEN = "<YOUR VERIFY TOKEN>";
+  const VERIFY_TOKEN = EAAJEK7wb07EBAJWZB0ZA1pIwIAO3NVeqanzayMZCHhHPgyZARVvkzctXsPrqWIU8NklY5ZAZC6CotSOh0IjwGoTLFyXIwtELGMhITvcCRBQLENOpFYMK5gHUFz8Df9pLIICpjKhEIIZApdnnjafzOb0ZC1ryJJZA6ZBArUbnr6jtYcDwZDZD;
   
   // Parse params from the webhook verification request
   let mode = req.query['hub.mode'];
@@ -172,7 +172,7 @@ function callSendAPI(sender_psid, response) {
   // Send the HTTP request to the Messenger Platform
   request({
     "uri": "https://graph.facebook.com/v2.6/me/messages",
-    "qs": { "access_token": PAGE_ACCESS_TOKEN },
+    "qs": { "access_token": EAAJEK7wb07EBAJWZB0ZA1pIwIAO3NVeqanzayMZCHhHPgyZARVvkzctXsPrqWIU8NklY5ZAZC6CotSOh0IjwGoTLFyXIwtELGMhITvcCRBQLENOpFYMK5gHUFz8Df9pLIICpjKhEIIZApdnnjafzOb0ZC1ryJJZA6ZBArUbnr6jtYcDwZDZD },
     "method": "POST",
     "json": request_body
   }, (err, res, body) => {
@@ -183,3 +183,55 @@ function callSendAPI(sender_psid, response) {
     }
   }); 
 }
+
+ $challenge = $_REQUEST['hub_challenge'];
+  $verify_token = $_REQUEST['hub_verify_token'];
+
+  if ($verify_token === 'Your's app token') {
+  echo $challenge;
+  }
+  //Token of app
+ $row = "Token";
+
+
+ $input = json_decode(file_get_contents('php://input'), true);
+
+//Receive user
+$sender = $input['entry'][0]['messaging'][0]['sender']['id'];
+ //User's message
+ $message = $input['entry'][0]['messaging'][0]['message']['text'];
+
+
+
+//Where the bot will send message
+ $url = 'https://graph.facebook.com/v2.6/me/messages?access_token='.$row;
+
+
+ $ch = curl_init($url);
+
+//Answer to the message adds 1
+if($message)
+{
+ $jsonData = '{
+    "recipient":{
+        "id":"'.$sender.'"
+      }, 
+    "message":{
+        "text":"'.$message. ' 1' .'"
+      }
+ }';
+};
+
+
+
+ $json_enc = $jsonData;
+
+ curl_setopt($ch, CURLOPT_POST, 1);
+
+ curl_setopt($ch, CURLOPT_POSTFIELDS, $json_enc);
+
+ curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));  
+
+ if(!empty($input['entry'][0]['messaging'][0]['message'])){
+    $result = curl_exec($ch);
+ }
